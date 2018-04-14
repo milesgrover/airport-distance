@@ -6,7 +6,8 @@
         <link rel="stylesheet" type="text/css" href="airports.css" />
     </head>
     <body>
-        <div class="airport-selector">
+        <div id="resultContainer" class="airport-result"></div>
+        <div id="selectFrom" class="airport-selector">
             <select>
                 <option>JFK</option>
                 <option>LAX</option>
@@ -14,7 +15,7 @@
                 <option>PDX</option>
             </select>
         </div>
-        <div class="airport-selector">
+        <div id="selectTo" class="airport-selector">
             <select>
                 <option>JFK</option>
                 <option>LAX</option>
@@ -22,7 +23,7 @@
                 <option>PDX</option>
             </select>
         </div>
-        <button class="airport-calc-btn">calculate distance</button>
+        <button id="calcBtn" class="airport-calc-btn">calculate distance</button>
 
         <script src="airports.js"></script>
     </body>

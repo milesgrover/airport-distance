@@ -2,29 +2,42 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title>Airport distance calculator</title>
+        <title>Between Two Airports</title>
         <link rel="stylesheet" type="text/css" href="airports.css" />
+        <link href="https://fonts.googleapis.com/css?family=Quicksand:400,500" rel="stylesheet">
     </head>
     <body>
-        <div id="resultContainer" class="airport-result"></div>
-        <div id="selectFrom" class="airport-selector">
-            <select>
-                <option>JFK</option>
-                <option>LAX</option>
-                <option>LAS</option>
-                <option>PDX</option>
-            </select>
-        </div>
-        <div id="selectTo" class="airport-selector">
-            <select>
-                <option>JFK</option>
-                <option>LAX</option>
-                <option>LAS</option>
-                <option>PDX</option>
-            </select>
-        </div>
-        <button id="calcBtn" class="airport-calc-btn">calculate distance</button>
+        <main>
+            <h1>BETWEEN TWO AIRPORTS</h1>
+            <p>Choose two airports to find out the distance between them</p>
+            <div id="selectFrom" class="airport-selector">
+                <label>from:</label>
+                <select>
+                    <option>JFK</option>
+                    <option>LAX</option>
+                    <option>LAS</option>
+                    <option>PDX</option>
+                </select>
+            </div>
+            <div id="selectTo" class="airport-selector">
+                <label>to:</label>
+                <select>
+                    <option>JFK</option>
+                    <option>LAX</option>
+                    <option>LAS</option>
+                    <option>PDX</option>
+                </select>
+            </div>
+            <button id="calcBtn" class="airport-calc-btn">CALCULATE</button>
+            <div id="resultContainer" class="airport-result">
+                <img src="img/earth.gif" alt="illustration of a plane circling the earth" />
+                <div class="chosen-locations"></div>
+                <div class="result-text"></div>
+                <button id="reCalcBtn">Another?</button>
+            </div>
+        </main>
 
+        <p class="byline">Built by Miles Grover</p>
         <script src="airports.js"></script>
     </body>
 </html>

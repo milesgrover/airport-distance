@@ -1,45 +1,316 @@
-.airport-selector {
-    position: relative;
+/*
+    COLORS
+    yellow: #fcee21
+    button yellow: #ffd400
+    dark yellow: #aba000
+    main blue: #45abff
+    medium blue: #7bcaff
+    light blue: #d9eeff
+    button blue: #337dbb
+
+    BREAKPOINTS
+    medium min: 540px
+    large min: 768px
+*/
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-.airport-selector button {
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #45abff;
+    background-image: url(img/plane-bg.svg);
+    background-size: 170px;
+    color: #fff;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
+    padding: 24px;
+    padding-bottom: 0;
+    overflow: hidden;
+}
+
+main {
+    width: 100%;
+    max-width: 750px;
+    font-size: 0;
+    text-align: center;
+}
+
+h1 {
+    font-size: 60px;
+    line-height: 1.1;
+    color: #fcee21;
+    font-weight: 500;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 8px;
+}
+
+p {
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0 0 14px 0;
+    padding: 0;
+}
+
+.airport-selector {
+    position: relative;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.airport-selector label {
+    font-size: 24px;
+    font-weight: 500;
+    color: #fcee21;
+    display: inline-block;
+    margin-bottom: 8px;
+    margin-top: 16px;
+}
+
+.airport-selector > button {
     background: #fff;
     border-radius: 4px;
-    border: 2px solid blue;
-    font-size: 24px;
+    border: 0;
+    font-family: inherit;
+    font-size: 36px;
     position: relative;
-    padding: 12px 36px 12px 12px;
+    padding: 0 36px 0 12px;
     width: 100%;
-    max-width: 400px;
+    height: 65px;
     display: flex;
     align-items: center;
     justify-content: stretch;
     text-align: left;
-    z-index: 1;
+    z-index: 2;
+    -webkit-box-shadow: 0px 6px 12px 0px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 6px 12px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 6px 12px 0px rgba(0,0,0,0.3);
+    outline: 0;
 }
 
-.airport-selector button:after {
-    content: 'V';
+.airport-selector > button:focus:before {
+    content: "";
+    position: absolute;
+    top: 2px; right: 2px; bottom: 2px; left: 2px;
+    border: 1px dashed #45abff;
+    border-radius: 4px;
+}
+
+@media (min-width: 540px) {
+    body {
+        justify-content: center;
+    }
+    .airport-selector {
+        display: inline-block;
+    }
+    .airport-selector > button {
+        width: 200px;
+    }
+
+    .airport-selector + .airport-selector {
+        margin-left: 20px;
+    }
+}
+
+.airport-selector > button:after {
+    content: url(img/chevron.svg);
     display: block;
     position: absolute;
-    width: 12px;
-    height: 12px;
+    width: 26px;
     right: 12px;
-    top: 0;
+    top: 5px;
     bottom: 0;
     margin: auto;
 }
 
-.airport-selector button[aria-expanded=true] + ul {
+.airport-selector > button[aria-expanded=true] + ul {
     display: block;
 }
 
-.airport-selector ul {
-    display: none;
+.airport-selector > button.is-open + ul {
+    max-height: 200px;
+}
+
+.airport-selector > ul {
+    max-height: 0; /* for animation */
+    display: none; /* so it's not focusable while closed */
+    overflow: hidden;
     list-style: none;
     margin: 0;
     padding: 0;
+    width: 100%;
     position: absolute;
-    top: 100%;
-    z-index: 2;
+    top: calc(100% + 4px);
+    z-index: 3;
+    text-align: left;
+    color: #000;
+    background-color: #d9eeff;
+    border-radius: 4px;
+    -webkit-box-shadow: 0px 6px 12px 0px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 6px 12px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 6px 12px 0px rgba(0,0,0,0.3);
+    transition: max-height 250ms ease-in-out;
+}
+
+.airport-selector > ul > li {
+    position: relative;
+}
+
+.airport-selector > ul > li > button {
+    padding: 8px 12px;
+    outline: 0;
+    border: 0;
+    background: transparent;
+    display: block;
+    width: 100%;
+    font-size: 24px;
+    text-align: left;
+    font-family: inherit;
+}
+
+.airport-selector > ul > li:hover,
+.airport-selector > ul > li > button:focus {
+    background: #7bcaff;
+}
+
+.airport-calc-btn {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    margin: 30px auto;
+    font-family: inherit;
+    border: 0;
+    border-radius: 4px;
+    height: 65px;
+    color: #fff;
+    font-size: 36px;
+    font-weight: 500;
+    background: linear-gradient(to bottom, #ffd400 0%,#aba000 100%);
+    -webkit-box-shadow: 0px 6px 12px 0px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 6px 12px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 6px 12px 0px rgba(0,0,0,0.3);
+    outline: 0;
+    position: relative;
+    transition: transform 100ms ease-in-out;
+}
+
+.airport-calc-btn:focus:before {
+    content: "";
+    position: absolute;
+    top: 2px; right: 2px; bottom: 2px; left: 2px;
+    border: 1px dashed #fff;
+    border-radius: 4px;
+}
+
+.airport-calc-btn:active {
+    transform: translateY(2px) scale(0.99);
+}
+
+.airport-result {
+    font-size: 36px;
+    font-weight: 500;
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    margin: auto;
+    height: 580px;
+    max-width: 580px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color:  #000;
+    z-index: 4;
+    transform: scale(0) rotate(90deg);
+    transition: transform 250ms ease-in-out;
+    overflow: hidden;
+}
+
+.airport-result:after {
+    background: url(img/burst.svg) no-repeat;
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
+    min-width: 580px;
+}
+
+.airport-result[aria-expanded=true] {
+    transform: scale(1) rotate(0);
+}
+
+.airport-result > img {
+    /* Earth's axial tilt :) */
+    transform: rotate(23.4deg);
+    margin-bottom: 12px;
+}
+
+.airport-result .chosen-locations {
+    color: #45abff;
+}
+
+.airport-result .result-text {
+    font-size: 60px;
+    font-weight: 400;
+    margin-bottom: 24px;
+}
+
+.airport-result > button {
+    border: 0;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 24px;
+    color: #fff;
+    padding: 12px 24px;
+    margin-bottom: 36px;
+    background: linear-gradient(to top, #337dbb 0%,#45abff 100%);
+    -webkit-box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.airport-result > button:active {
+    transform: translateY(2px) scale(0.99);
+}
+
+.airport-result > button:focus:before {
+    content: "";
+    position: absolute;
+    top: 2px; right: 2px; bottom: 2px; left: 2px;
+    border: 1px dashed #fff;
+    border-radius: 4px;
+}
+
+.byline {
+    font-size: 18px;
+    color: rgba(255,255,255, 0.8);
+    margin: 0;
+    padding: 0;
+    padding-bottom: 24px;
+}
+
+@media (min-width: 540px) {
+    .byline {
+        position: absolute;
+        bottom: 24px;
+        padding-bottom: 0;
+    }
+}
+
+.soft-dismiss {
+    position: absolute;
+    background: transparent;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: -1;
 }

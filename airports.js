@@ -43,7 +43,14 @@ IntentMedia.Distances = (function () {
 // Airport distance calculator app
 // Code by Miles Grover
 
-// Replace select controls with elements that can be styled in CSS
+// I'm using the built-in HTML <select> control so that this component will
+// work if used inside a <form> to submit values via POST, etc.
+// However, <select> only allows very limited CSS styling, so this code replaces
+// that UI with generic elements that can be styled, while making sure to update
+// the actual <select>'s value.
+// Doing this all in JavaScript keeps the HTML API simple (just use <select>)
+// and also ensures that turning off JavaScript the <select> still works
+// e.g. within a <form> with a <submit> button.
 (function selectReplace() {
     var selectComponents = document.querySelectorAll('.airport-selector');
     var selectComponent,
@@ -51,12 +58,16 @@ IntentMedia.Distances = (function () {
         optionElements,
         entryPoint,
         optsList,
-        listItem;
+        listItem,
+        listBtn;
+
+    var softDismiss = document.createElement('div');
+    softDismiss.classList.add('soft-dismiss');
+    document.body.appendChild(softDismiss);
 
     // loop through selectComponents nodelist
     // using for loops since not all browsers support methods like 'foreach' on non-arrays
     for (var i = 0; i < selectComponents.length; i++) {
-        // define elements
         selectComponent = selectComponents[i];
         selectElement = selectComponent.querySelector('select');
         optionElements = selectElement.querySelectorAll('option');
@@ -68,8 +79,10 @@ IntentMedia.Distances = (function () {
         entryPoint = document.createElement('button');
         entryPoint.classList.add('entry-point');
         entryPoint.textContent = optionElements[0].value;
+        entryPoint.setAttribute('aria-haspopup', true);
         entryPoint.addEventListener('click', function(e) {
             selectOpenList(e);
+            selectSoftDismiss(e);
         });
         selectComponents[i].appendChild(entryPoint);
 
@@ -80,15 +93,16 @@ IntentMedia.Distances = (function () {
         // loop through options and add them to the list
         for (var j = 0; j < optionElements.length; j++) {
             listItem = document.createElement('li');
-            listItem.textContent = optionElements[j].value;
-            listItem.tabIndex = 0;
-            listItem.addEventListener('click', function(e) {
+            optsList.appendChild(listItem);
+            listBtn = document.createElement('button');
+            listBtn.textContent = optionElements[j].value;
+            listBtn.addEventListener('click', function(e) {
                 selectUpdateValue(e);
             });
-            optsList.appendChild(listItem);
+            listItem.appendChild(listBtn);
         }
 
-        // open and close the list by setting aria-expanded
+        // open and close the list by setting aria-expanded on the entry point
         function selectOpenList(e) {
             var target;
             if (e.target) {
@@ -103,32 +117,59 @@ IntentMedia.Distances = (function () {
                 expandedState = 'true';
             }
             target.setAttribute('aria-expanded', expandedState);
+
+            // second toggle here is a compromise to allow animation on opening
+            // while still providing good tab focus behavior
+            setTimeout(function(){
+                target.classList.toggle('is-open');
+            },50);
         }
 
         // update entry point text and value of underlying select element
         function selectUpdateValue(e) {
             var target = e.target;
             var value = target.textContent;
-            var thisSelectElement = target.parentNode.parentNode.querySelector('select');
-            var thisEntryPoint = target.parentNode.previousElementSibling;
+            var thisSelectElement = target.parentNode.parentNode.parentNode.querySelector('select');
+            var thisEntryPoint = target.parentNode.parentNode.previousElementSibling;
             thisSelectElement.value = value;
             thisEntryPoint.textContent = value;
-
+            // close the list when you've selected an option
             selectOpenList(thisEntryPoint);
+            softDismiss.style.zIndex = '';
+        }
+
+        function selectSoftDismiss(e) {
+            softDismiss.style.zIndex = 1;
+            softDismiss.addEventListener('click', function() {
+                e.target.classList.remove('is-open');
+                e.target.setAttribute('aria-expanded', 'false');
+                softDismiss.style.zIndex = '';
+            });
         }
     }
 }());
 
-// function to call the Intent API and display the distance
-(function calculateDistance() {
+// Call the Intent API and display the distance
+(function displayDistance() {
     var calcBtn = document.getElementById('calcBtn');
     var resultContainer = document.getElementById('resultContainer');
+    var chosenLocs = resultContainer.querySelector('.chosen-locations');
+    var resultText = resultContainer.querySelector('.result-text');
+    var closeResultBtn = document.getElementById('reCalcBtn');
+    closeResultBtn.tabIndex = -1;
 
     calcBtn.addEventListener('click', function() {
         var fromValue = document.querySelector('#selectFrom select').value;
         var toValue = document.querySelector('#selectTo select').value;
         var result = IntentMedia.Distances.distance_between_airports(fromValue, toValue);
-
-        resultContainer.textContent = result;
+        chosenLocs.textContent = `${fromValue} to ${toValue}`;
+        resultText.textContent = result + ' miles';
+        closeResultBtn.tabIndex = 0;
+        resultContainer.setAttribute('aria-expanded', true);
+        this.blur();
+    });
+    closeResultBtn.addEventListener('click', function() {
+        resultContainer.setAttribute('aria-expanded', false);
+        closeResultBtn.tabIndex = -1;
     });
 }());

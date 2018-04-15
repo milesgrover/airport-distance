@@ -121,7 +121,8 @@ p {
 }
 
 .airport-selector > button:after {
-    content: url(img/chevron.svg);
+    content: "";
+    background: url(img/chevron.svg) no-repeat center center;
     display: block;
     position: absolute;
     width: 26px;
